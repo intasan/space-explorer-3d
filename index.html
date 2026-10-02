@@ -1,0 +1,9 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Space Explorer 3D</title><style>body{margin:0;overflow:hidden;background:#05060b;color:#fff}canvas{display:block}</style></head><body><script type="module">
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.module.js';
+const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(50,innerWidth/innerHeight,.1,100);camera.position.z=12;
+const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setSize(innerWidth,innerHeight);document.body.appendChild(renderer.domElement);
+scene.add(new THREE.AmbientLight(0xffffff,.8));
+const specs=[['Sun',2,0xffcc44,0,0],['Venus',.7,0xd8a06c,-3,0],['Earth',.8,0x4477cc,0,0],['Saturn',1.2,0xd7c08c,3,0]];
+const objects=[];for(const [name,size,color,x,z] of specs){const mesh=new THREE.Mesh(new THREE.SphereGeometry(size,32,32),new THREE.MeshStandardMaterial({color}));mesh.position.set(x,0,z);mesh.userData.name=name;scene.add(mesh);objects.push(mesh);if(name==='Saturn'){const ring=new THREE.Mesh(new THREE.RingGeometry(1.5,2.1,64),new THREE.MeshBasicMaterial({color:0xc8b88c,side:THREE.DoubleSide,transparent:true,opacity:.7}));ring.rotation.x=Math.PI/2;mesh.add(ring)}}
+function animate(){requestAnimationFrame(animate);objects.forEach(o=>o.rotation.y+=.01);renderer.render(scene,camera)}animate();addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});
+</script></body></html>
